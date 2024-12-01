@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page xmlns="http://schemas.nativescript.org/tns.xsd" navigatingTo="navigatingTo" class="bg-gray-100">
+    <ActionBar title="Détecteur d'Investissement" class="bg-blue-600 text-white" />
+    
+    <StackLayout>
+        <GridLayout rows="auto" columns="*, auto" class="p-4">
+            <TextField col="0" 
+                      hint="Entrez le symbole (ex: AAPL)" 
+                      text="{{ searchSymbol }}" 
+                      class="p-2 bg-white rounded border border-gray-300" />
+            <Button col="1" 
+                    text="Analyser" 
+                    tap="{{ analyzeStock }}" 
+                    isEnabled="{{ !isLoading }}"
+                    class="ml-2 bg-blue-600 text-white rounded-lg px-4" />
+        </GridLayout>
+
+        <ActivityIndicator busy="{{ isLoading }}" class="m-4" />
+
+        <ScrollView>
+            <StackLayout class="p-4" visibility="{{ analysis ? 'visible' : 'collapsed' }}">
+                <StackLayout class="bg-white p-4 rounded-lg shadow-md">
+                    <Label text="{{ 'Symbole: ' + analysis.symbol }}" class="text-xl font-bold mb-2" />
+                    
+                    <Label text="{{ 'Score de Confiance: ' + analysis.confidenceScore + '%' }}" 
+                           class="text-lg mb-2" />
+                    
+                    <Label text="{{ 'Recommandation: ' + analysis.recommendation }}" 
+                           class="text-lg font-bold mb-4" 
+                           color="{{ analysis.recommendation === 'ACHETER' ? 'green' : 
+                                   analysis.recommendation === 'VENDRE' ? 'red' : 'orange' }}" />
+                    
+                    <Label text="Indicateurs Techniques:" class="text-lg font-bold mb-2" />
+                    <Label text="{{ 'RSI: ' + analysis.technicalIndicators.rsi }}" class="mb-1" />
+                    <Label text="{{ 'MACD: ' + analysis.technicalIndicators.macd }}" class="mb-4" />
+                    
+                    <Label text="Objectifs de Prix:" class="text-lg font-bold mb-2" />
+                    <Label text="{{ 'Court terme: ' + analysis.priceTarget.short + '€' }}" class="mb-1" />
+                    <Label text="{{ 'Long terme: ' + analysis.priceTarget.long + '€' }}" class="mb-4" />
+                    
+                    <Label text="Raisons:" class="text-lg font-bold mb-2" />
+                    <Repeater items="{{ analysis.reasons }}">
+                        <Repeater.itemTemplate>
+                            <Label text="{{ '• ' + $value }}" textWrap="true" class="mb-1" />
+                        </Repeater.itemTemplate>
+                    </Repeater>
+                </StackLayout>
+            </StackLayout>
+        </ScrollView>
+    </StackLayout>
+</Page>
